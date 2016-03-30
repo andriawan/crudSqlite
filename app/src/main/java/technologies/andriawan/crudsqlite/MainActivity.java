@@ -1,6 +1,7 @@
 package technologies.andriawan.crudsqlite;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
@@ -21,10 +22,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     protected Cursor cursor;
     SQLHelper dbHelper;
-    Context myContext;
     Button export;
     Button Mimport;
     Button read;
+    Button Filter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +34,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         export = (Button) findViewById(R.id.export);
         Mimport = (Button) findViewById(R.id.Mimport);
         read = (Button) findViewById(R.id.read_data);
+        Filter = (Button) findViewById(R.id.filter);
 
 
         export.setOnClickListener(this);
         Mimport.setOnClickListener(this);
         read.setOnClickListener(this);
+        Filter.setOnClickListener(this);
 
         //creating a new folder for the database to be backuped to
         File direct = new File(Environment.getExternalStorageDirectory() + "/crudSqlite");
@@ -130,13 +133,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        cursor = db.rawQuery("SELECT * FROM kontak",null);
+        cursor = db.rawQuery("SELECT * FROM aclass",null);
 
         cursor.moveToFirst();
         for (int cc=0; cc < cursor.getCount(); cc++)
         {
             cursor.moveToPosition(cc);
-            Toast.makeText(getApplicationContext(), cursor.getString(1).toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), cursor.getString(2), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -158,8 +161,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.exit) {
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
@@ -178,6 +181,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (view == read){
             read_data();
+        }
+
+        if (view == Filter){
+            startActivity(new Intent(this,FilterAction.class));
         }
 
     }
